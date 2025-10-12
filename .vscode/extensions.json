@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "ms-dotnettools.csdevkit",
+    "microsoft-aspire.aspire-vscode",
+    "vscjava.vscode-java-pack",
+    "vmware.vscode-boot-dev-pack",
+  ]
+}
