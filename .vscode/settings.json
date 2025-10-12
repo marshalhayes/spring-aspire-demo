@@ -1,3 +1,11 @@
 {
-  "java.compile.nullAnalysis.mode": "automatic"
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.test.config": {
+    "vmArgs": [
+      "--sun-misc-unsafe-memory-access=allow",
+      "-Xshare:off",
+      "-XX:+EnableDynamicAgentLoading",
+      "-Dspring.output.ansi.enabled=always"
+    ]
+  }
 }
