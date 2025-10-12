@@ -22,19 +22,22 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public abstract class ContainerizedDbMigrationInitializer {
   @Container
   @SuppressWarnings("resource")
-  static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17-alpine")
+  private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17-alpine")
       .withDatabaseName("testdb")
       .withUsername("postgres")
       .withPassword("postgres");
 
   @DynamicPropertySource
-  static void configureProperties(DynamicPropertyRegistry registry) {
+  private static void configureProperties(DynamicPropertyRegistry registry) {
     String jdbcUrl = postgres.getJdbcUrl();
     String r2dbcUrl = jdbcUrl.replace("jdbc:postgresql://", "r2dbc:postgresql://");
 
     registry.add("spring.r2dbc.url", () -> r2dbcUrl);
     registry.add("spring.r2dbc.username", postgres::getUsername);
     registry.add("spring.r2dbc.password", postgres::getPassword);
+    
+    // Configure R2DBC pool for tests to prevent connection errors
+    registry.add("spring.r2dbc.pool.initial-size", () -> 1);
 
     registry.add("spring.flyway.url", () -> jdbcUrl);
     registry.add("spring.flyway.user", postgres::getUsername);
