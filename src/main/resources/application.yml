@@ -3,14 +3,14 @@ spring:
     name: demo-app
 
   r2dbc:
-    url: r2dbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-    username: ${DB_USER}
-    password: ${DB_PASS}
+    url: r2dbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   
   flyway:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-    user: ${DB_USER}
-    password: ${DB_PASS}
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_DATABASE}
+    user: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     
 server:
   port: ${SERVER_PORT:8080}
