@@ -1,11 +1,9 @@
-﻿#!/usr/bin/env dotnet
+#!/usr/bin/env dotnet
 
 #:package CommunityToolkit.Aspire.Hosting.Java@13.0.0
-#:package Aspire.Hosting.PostgreSQL@13.0.0
-#:sdk Aspire.AppHost.Sdk@13.0.0
+#:package Aspire.Hosting.PostgreSQL@13.2.0-pr.14756.g3234c26a
+#:sdk Aspire.AppHost.Sdk@13.2.0-pr.14756.g3234c26a
 #:property UserSecretsId=spring-aspire-demo
-
-using System.Data.Common;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -42,7 +40,27 @@ builder.AddJavaApp("spring-app", workingDirectory: "./",
     .WaitFor(db)
 
     // Add a health check endpoint
-    .WithHttpHealthCheck("/actuator/health");
+    .WithHttpHealthCheck("/actuator/health")
+
+    // Add Aspire's certificate trust configuration
+    .WithCertificateTrustConfiguration(config =>
+    {
+        // Use ReferenceExpression.Create to compose expressions so values resolve at runtime
+        var trustStoreArgs = ReferenceExpression.Create(
+            $"-Djavax.net.ssl.trustStore={config.Pkcs12BundlePath} -Djavax.net.ssl.trustStorePassword={config.Pkcs12BundlePassword} -Djavax.net.ssl.trustStoreType=PKCS12");
+
+        // Merge with existing JAVA_TOOL_OPTIONS if present
+        if (config.EnvironmentVariables.TryGetValue("JAVA_TOOL_OPTIONS", out var toolOptions) && toolOptions is ReferenceExpression existingOptions)
+        {
+            config.EnvironmentVariables["JAVA_TOOL_OPTIONS"] = ReferenceExpression.Create($"{existingOptions} {trustStoreArgs}");
+        }
+        else
+        {
+            config.EnvironmentVariables["JAVA_TOOL_OPTIONS"] = trustStoreArgs;
+        }
+
+        return Task.CompletedTask;
+    });
 
 var app = builder.Build();
 
