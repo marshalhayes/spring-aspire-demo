@@ -1,8 +1,8 @@
 #!/usr/bin/env dotnet
 
 #:package CommunityToolkit.Aspire.Hosting.Java@13.0.0
-#:package Aspire.Hosting.PostgreSQL@13.2.0-pr.14756.g3234c26a
-#:sdk Aspire.AppHost.Sdk@13.2.0-pr.14756.g3234c26a
+#:package Aspire.Hosting.PostgreSQL@13.2.0-pr.14756.g244d8286
+#:sdk Aspire.AppHost.Sdk@13.2.0-pr.14756.g244d8286
 #:property UserSecretsId=spring-aspire-demo
 
 var builder = DistributedApplication.CreateBuilder(args);
